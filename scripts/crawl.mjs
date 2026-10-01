@@ -28,7 +28,7 @@ for (const file of pages) {
   const page = '/' + relative(DIST, file).replace(/index\.html$/, '');
   const add = (u) => {
     if (!u || u.startsWith('#') || u.startsWith('mailto:') || u.startsWith('data:')) return;
-    if (u.startsWith('https://chartle5.github.io')) u = u.replace('https://chartle5.github.io', '');
+    if (u.startsWith('https://caelanbolt-ship-it.github.io')) u = u.replace('https://caelanbolt-ship-it.github.io', '');
     if (!u.startsWith('/') && !u.startsWith('http')) return; // meta content like "summary_large_image"
     if (!refs.has(u)) refs.set(u, new Set());
     refs.get(u).add(page);

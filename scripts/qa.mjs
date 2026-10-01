@@ -86,7 +86,7 @@ for (const slug of videoSlugs) {
 }
 
 // 5. External links.
-for (const url of ['https://github.com/chartle5', 'https://www.linkedin.com/in/chartle22', 'https://www.youtube.com/watch?v=fwXobqQA5SY']) {
+for (const url of ['https://github.com/caelanbolt-ship-it', 'https://www.linkedin.com/in/chartle22', 'https://www.youtube.com/watch?v=fwXobqQA5SY']) {
   try {
     const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': 'Mozilla/5.0 (Macintosh) link-check' } });
     // LinkedIn answers automated requests with 999 even for valid profiles.

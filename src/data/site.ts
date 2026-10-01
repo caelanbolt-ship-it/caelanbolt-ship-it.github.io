@@ -4,10 +4,10 @@ export const site = {
   statement: 'I build agentic AI systems.',
   description:
     'Caelan Hartley, Software Engineering at Western University, builds agentic AI systems. Walkthrough videos of five projects: my-crm, Hush, Golf Event Planner, Assessly and an AI-generated face detector.',
-  url: 'https://chartle5.github.io',
+  url: 'https://caelanbolt-ship-it.github.io',
   resume: '/Caelan-Hartley-Resume.pdf',
   email: 'caelanhartley@icloud.com',
-  github: 'https://github.com/chartle5',
+  github: 'https://github.com/caelanbolt-ship-it',
   linkedin: 'https://www.linkedin.com/in/chartle22',
 } as const;
 

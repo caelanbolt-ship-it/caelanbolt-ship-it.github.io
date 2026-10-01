@@ -44,7 +44,7 @@ export const GET: APIRoute = async ({ params }) => {
     h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: 560, paddingRight: 40 }, [
       h('div', { display: 'flex', alignItems: 'center', gap: 14, fontSize: 22, fontWeight: 500, color: '#8e97a7' }, [
         h('div', { width: 36, height: 36, borderRadius: 9, background: '#eceff4', color: '#0a0c10', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700 }, 'CH'),
-        project ? site.name : 'chartle5.github.io',
+        project ? site.name : 'caelanbolt-ship-it.github.io',
       ]),
       h('div', { display: 'flex', flexDirection: 'column' }, [
         h('div', { fontSize: 22, fontWeight: 500, color: '#88a4ff', marginBottom: 18 }, eyebrow),

@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 const fontDir = './node_modules/@fontsource';
 
 export default defineConfig({
-  site: 'https://chartle5.github.io',
+  site: 'https://caelanbolt-ship-it.github.io',
   base: '/',
   output: 'static',
   trailingSlash: 'always',
