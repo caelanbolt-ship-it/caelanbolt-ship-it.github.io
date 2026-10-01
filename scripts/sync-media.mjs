@@ -8,7 +8,7 @@ import sharp from 'sharp';
 import { EXPORTS, SLUGS, listedFiles } from './verify-exports.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
-const RESUME_SRC = '/Users/caelanhartley/portfolio/Caelan Hartley Resume.pdf';
+const RESUME_SRC = '/Users/caelanhartley/portfolio/Caelan_Hartley_Resume.pdf';
 const RESUME_DEST = join(ROOT, 'public/Caelan-Hartley-Resume.pdf');
 
 const sha256 = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
