@@ -14,7 +14,7 @@ import { site } from '../data/site';
         <li><a href="/#work">Work</a></li>
         <li><a href="/#experience">Experience</a></li>
         <li><a href="#contact">Contact</a></li>
-        <li class="resume"><a href={site.resume} data-astro-reload>Résumé</a></li>
+        <li class="resume"><a href={site.resume} target="_blank" rel="noopener">Résumé<span class="sr-only"> (opens in a new tab)</span></a></li>
       </ul>
       <button class="theme" type="button" data-theme-toggle aria-label="Switch color theme">
         <span class="i-sun"><Icon name="sun" size={18} /></span>

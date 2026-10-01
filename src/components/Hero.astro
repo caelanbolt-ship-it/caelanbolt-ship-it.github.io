@@ -28,9 +28,9 @@ const words = site.name.split(' ').map((w) => [...w]);
       5 projects, each with a walkthrough video of the real thing running.
     </p>
     <div class="actions" data-hero-part>
-      <a class="btn btn--primary" href={site.resume} data-astro-reload><Icon name="file" />Résumé (PDF)</a>
-      <a class="btn" href={site.github} rel="me"><Icon name="github" />GitHub</a>
-      <a class="btn" href={site.linkedin} rel="me"><Icon name="linkedin" />LinkedIn</a>
+      <a class="btn btn--primary" href={site.resume} target="_blank" rel="noopener"><Icon name="file" />Résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="btn" href={site.github} target="_blank" rel="me noopener"><Icon name="github" />GitHub<span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="btn" href={site.linkedin} target="_blank" rel="me noopener"><Icon name="linkedin" />LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
       <a class="btn" href={`mailto:${site.email}`}><Icon name="mail" />Email</a>
     </div>
   </div>
