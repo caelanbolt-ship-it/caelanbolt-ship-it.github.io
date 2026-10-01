@@ -1,0 +1,223 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import ArchDiagram from '../../components/ArchDiagram.astro';
+import Gallery from '../../components/Gallery.astro';
+import YouTubeFacade from '../../components/YouTubeFacade.astro';
+import { projects, neighbours, formatDuration, type Project } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props { project: Project }
+const { project: p } = Astro.props;
+const { prev, next } = neighbours(p.slug);
+const media = `/media/${p.slug}`;
+---
+
+<Base
+  title={`${p.title}: ${p.tagline} · Caelan Hartley`}
+  description={p.pitch}
+  og={p.slug}
+  preloadImage={p.media.kind === 'video' ? { href: `${media}/poster-1280.webp` } : undefined}
+>
+  <article class="project">
+    <header class="container head">
+      <a class="back" href="/#work"><Icon name="arrow-left" size={16} />All Projects</a>
+      <p class="kicker mono" data-reveal>{p.kicker}</p>
+      <h1 transition:name={`title-${p.slug}`} translate="no">{p.title}</h1>
+      <p class="tagline" data-reveal>{p.tagline}</p>
+      <ul class="chips" aria-label="Stack highlights" translate="no" data-reveal>
+        {p.chips.map((c) => <li>{c}</li>)}
+      </ul>
+    </header>
+
+    <div class="container">
+      <figure class="player">
+        <div class="frame" transition:name={`media-${p.slug}`}>
+          {p.media.kind === 'video' ? (
+            <video
+              controls
+              preload="none"
+              playsinline
+              poster={`${media}/poster-1280.webp`}
+              width="1920"
+              height="1080"
+              aria-label={p.media.label}
+            >
+              <source src={`${media}/walkthrough.mp4`} type="video/mp4" />
+              <track kind="captions" src={`${media}/captions.vtt`} srclang="en" label="English" default />
+              Your browser can’t play this video. <a href={`${media}/walkthrough.mp4`}>Download the walkthrough (MP4)</a>.
+            </video>
+          ) : (
+            <YouTubeFacade id={p.media.id} title={p.title} media={media} alt={p.media.posterAlt} />
+          )}
+        </div>
+        <figcaption>
+          <span class="mono">
+            {p.media.kind === 'video' ? `Walkthrough · ${formatDuration(p.media.duration)} · captions on` : 'Walkthrough on YouTube'}
+          </span>
+          <details class="about">
+            <summary>About This Recording</summary>
+            {p.disclosure.map((line) => <p>{line}</p>)}
+          </details>
+        </figcaption>
+      </figure>
+    </div>
+
+    <section class="container metrics" aria-label="By the numbers">
+      <dl class="tiles" style={`--n: ${p.metrics.length}`}>
+        {p.metrics.map((m) => (
+          <div class="tile" data-reveal>
+            <dt>{m.label}{m.note && <span class="note">{m.note}</span>}</dt>
+            <dd>{m.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="container prose-grid" aria-labelledby="problem-h">
+      <h2 id="problem-h" data-reveal>The Problem</h2>
+      <div class="prose" data-reveal>
+        {p.problem.map((para) => <p>{para}</p>)}
+      </div>
+    </section>
+
+    <section class="container prose-grid" aria-labelledby="built-h">
+      <h2 id="built-h" data-reveal>What I Built</h2>
+      <div class="prose">
+        <p class="intro" data-reveal>{p.built.intro}</p>
+        <ul class="built">
+          {p.built.items.map((item) => (
+            <li data-reveal><strong>{item.lead}</strong> {item.text}</li>
+          ))}
+        </ul>
+        {p.built.outro && <p class="outro" data-reveal>{p.built.outro}</p>}
+      </div>
+    </section>
+
+    <section class="container block" aria-labelledby="arch-h">
+      <div class="block-head" data-reveal>
+        <p class="eyebrow">Architecture</p>
+        <h2 id="arch-h">How It Fits Together</h2>
+      </div>
+      <div class="diagram-wrap">
+        <ArchDiagram diagram={p.diagram} slug={p.slug} title={p.title} />
+      </div>
+    </section>
+
+    <section class="container prose-grid" aria-labelledby="stack-h">
+      <h2 id="stack-h" data-reveal>Stack</h2>
+      <ul class="chips stack" translate="no" data-reveal>
+        {p.stack.map((s) => <li>{s}</li>)}
+      </ul>
+    </section>
+
+    {p.screenshots.length > 0 && (
+      <section class="container block" aria-labelledby="shots-h">
+        <div class="block-head" data-reveal>
+          <p class="eyebrow">Screenshots</p>
+          <h2 id="shots-h">From the Walkthrough</h2>
+        </div>
+        <Gallery shots={p.screenshots} title={p.title} />
+      </section>
+    )}
+
+    <nav class="container pager" aria-label="More projects">
+      <a class="prev" href={`/projects/${prev.slug}/`}>
+        <span class="mono"><Icon name="arrow-left" size={14} />Previous</span>
+        <strong>{prev.title}</strong>
+        <span class="t">{prev.tagline}</span>
+      </a>
+      <a class="next" href={`/projects/${next.slug}/`}>
+        <span class="mono">Next<Icon name="arrow-right" size={14} /></span>
+        <strong>{next.title}</strong>
+        <span class="t">{next.tagline}</span>
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .head { padding-block: clamp(28px, 5vw, 56px) clamp(24px, 3vw, 36px); }
+  .back {
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: clamp(28px, 4vw, 44px);
+    color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.9375rem;
+  }
+  .back:hover { color: var(--ink); }
+  .back :global(svg) { transition: transform 0.25s var(--ease-out); }
+  .back:hover :global(svg) { transform: translateX(-3px); }
+  .kicker { margin: 0 0 12px; color: var(--muted); }
+  h1 { font-size: clamp(2.6rem, 7vw, 5.25rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.95; width: fit-content; }
+  .tagline { font-size: clamp(1.15rem, 2vw, 1.5rem); color: var(--ink-2); margin: 16px 0 20px; letter-spacing: -0.015em; }
+
+  .player { margin: 0; }
+  .frame { border-radius: var(--radius); overflow: hidden; background: #000; box-shadow: var(--shadow-md); }
+  .frame video { width: 100%; aspect-ratio: 16 / 9; background: #000; }
+  figcaption { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-top: 14px; color: var(--muted); }
+  .about { max-width: 64ch; }
+  .about summary { cursor: pointer; font-size: 0.9375rem; color: var(--ink-2); font-weight: 500; }
+  .about summary:hover { color: var(--ink); }
+  .about p { margin: 10px 0 0; font-size: 0.9375rem; }
+
+  .metrics { padding-block: clamp(48px, 7vw, 88px) 0; }
+  .tiles { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 1px; margin: 0; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .tile { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 10px; padding: 24px 22px; background: var(--surface); }
+  .tile dd { margin: 0; font-size: clamp(2rem, 3.6vw, 2.9rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tile dt { font-weight: 600; color: var(--ink-2); line-height: 1.35; }
+  .note { display: block; margin-top: 4px; font-family: var(--mono); font-size: 0.6875rem; font-weight: 400; color: var(--muted); }
+
+  .prose-grid {
+    display: grid; grid-template-columns: minmax(180px, 0.42fr) minmax(0, 1fr); gap: 16px clamp(24px, 5vw, 72px);
+    padding-top: clamp(56px, 8vw, 104px);
+  }
+  .prose-grid h2, .block-head h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); letter-spacing: -0.035em; }
+  .prose { max-width: 68ch; color: var(--ink-2); font-size: 1.0625rem; }
+  .prose p:last-child { margin-bottom: 0; }
+  .intro { color: var(--ink); }
+  .built { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .built li { position: relative; padding-left: 22px; }
+  .built li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 10px; height: 2px; background: var(--accent); border-radius: 2px; }
+  .built strong { color: var(--ink); font-weight: 650; }
+  .outro { margin-top: 18px; padding: 14px 16px; border-left: 2px solid var(--line-strong); background: var(--surface-2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.9375rem; }
+  .stack { align-content: start; }
+
+  .block { padding-top: clamp(64px, 9vw, 112px); }
+  .block-head { margin-bottom: clamp(24px, 3vw, 36px); }
+  .block-head .eyebrow { margin: 0 0 8px; }
+  .diagram-wrap { padding: clamp(18px, 3vw, 36px); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-block: clamp(72px, 10vw, 128px) clamp(24px, 4vw, 48px); }
+  .pager a {
+    position: relative; display: grid; gap: 6px; padding: 22px 24px; text-decoration: none; border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--surface); transition: transform 0.3s var(--ease-out);
+  }
+  .pager a::after {
+    content: ''; position: absolute; inset: -1px; border-radius: inherit; box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+  }
+  .pager .next { text-align: right; }
+  .pager .next .mono { justify-content: flex-end; }
+  .pager .mono { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+  .pager strong { font-size: 1.25rem; letter-spacing: -0.02em; }
+  .pager .t { color: var(--muted); font-size: 0.9375rem; }
+  @media (hover: hover) and (pointer: fine) {
+    .pager a:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+    .pager a:hover::after { opacity: 1; }
+  }
+
+  @media (max-width: 999px) {
+    .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+  @media (max-width: 640px) {
+    .tile { padding: 18px 16px; }
+  }
+  @media (max-width: 760px) {
+    .prose-grid { grid-template-columns: 1fr; }
+    .pager { grid-template-columns: 1fr; }
+    .pager .next { text-align: left; }
+    .pager .next .mono { justify-content: flex-start; }
+  }
+</style>

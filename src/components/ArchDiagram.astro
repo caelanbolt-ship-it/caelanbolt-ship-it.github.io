@@ -1,0 +1,210 @@
+---
+// Hand-built architecture diagram. Nodes sit on a (col, row) grid; edges are routed
+// orthogonally with rounded corners. Two orientations are rendered at build time:
+// horizontal for wide screens, vertical (columns stacked downwards) for phones.
+import type { Diagram, DiagramNode } from '../data/projects';
+
+interface Props { diagram: Diagram; slug: string; title: string }
+const { diagram, slug, title } = Astro.props;
+
+type Orientation = 'h' | 'v';
+type Pt = [number, number];
+type Route = 'sp' | 'ps' | undefined;
+interface Box { p0: number; s0: number; p1: number; s1: number; pc: number; sc: number }
+
+const PAD = 10;
+const geometry = {
+  h: { w: 184, h: 66, gapP: 44, gapS: 38 },
+  v: { w: 150, h: 54, gapP: 34, gapS: 14 },
+};
+
+const cols = Math.max(...diagram.nodes.map((n) => n.col)) + 1;
+const rows = Math.max(...diagram.nodes.map((n) => n.row)) + 1;
+
+function layout(o: Orientation) {
+  const g = geometry[o];
+  // Abstract axes: p runs along columns (the data flow), s along rows.
+  const pSize = o === 'h' ? g.w : g.h;
+  const sSize = o === 'h' ? g.h : g.w;
+  const pGap = g.gapP;
+  const sGap = g.gapS;
+  const box = (n: DiagramNode): Box => {
+    const p0 = PAD + n.col * (pSize + pGap);
+    const s0 = PAD + n.row * (sSize + sGap);
+    return { p0, s0, p1: p0 + pSize, s1: s0 + sSize, pc: p0 + pSize / 2, sc: s0 + sSize / 2 };
+  };
+  const toXY = ([p, s]: Pt): Pt => (o === 'h' ? [p, s] : [s, p]);
+  const width = o === 'h' ? PAD * 2 + cols * pSize + (cols - 1) * pGap : PAD * 2 + rows * sSize + (rows - 1) * sGap;
+  const height = o === 'h' ? PAD * 2 + rows * sSize + (rows - 1) * sGap : PAD * 2 + cols * pSize + (cols - 1) * pGap;
+
+  const byId = new Map(diagram.nodes.map((n) => [n.id, n]));
+
+  const nodes = diagram.nodes.map((n) => {
+    const b = box(n);
+    const [x, y] = toXY([b.p0, b.s0]);
+    return { ...n, x, y, w: g.w, h: g.h };
+  });
+
+  const edges = diagram.edges.map(([from, to, route]) => {
+    const a = box(byId.get(from)!);
+    const b = box(byId.get(to)!);
+    const pts = routeEdge(a, b, route);
+    const xy = pts.map(toXY);
+    return { from, to, d: rounded(xy, 9), arrow: arrowHead(xy) };
+  });
+
+  return { width, height, nodes, edges };
+}
+
+function routeEdge(a: Box, b: Box, route: Route): Pt[] {
+  const dirP = Math.sign(b.pc - a.pc);
+  const dirS = Math.sign(b.sc - a.sc);
+  if (dirP === 0) {
+    // Same column: straight along s.
+    return [[a.pc, dirS > 0 ? a.s1 : a.s0], [b.pc, dirS > 0 ? b.s0 : b.s1]];
+  }
+  const aP = dirP > 0 ? a.p1 : a.p0;
+  const bP = dirP > 0 ? b.p0 : b.p1;
+  if (route === 'sp') {
+    // Leave through A's s-side, then turn along p into B.
+    return [[a.pc, dirS > 0 ? a.s1 : a.s0], [a.pc, b.sc], [bP, b.sc]];
+  }
+  if (route === 'ps') {
+    // Leave through A's p-side, then turn along s into B's s-side.
+    return [[aP, a.sc], [b.pc, a.sc], [b.pc, dirS > 0 ? b.s0 : b.s1]];
+  }
+  if (dirS === 0) return [[aP, a.sc], [bP, b.sc]];
+  const mid = (aP + bP) / 2;
+  return [[aP, a.sc], [mid, a.sc], [mid, b.sc], [bP, b.sc]];
+}
+
+function rounded(pts: Pt[], r: number) {
+  let d = `M${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [px, py] = pts[i - 1];
+    const [cx, cy] = pts[i];
+    const [nx, ny] = pts[i + 1];
+    const inLen = Math.hypot(cx - px, cy - py);
+    const outLen = Math.hypot(nx - cx, ny - cy);
+    const rr = Math.min(r, inLen / 2, outLen / 2);
+    const ax = cx - ((cx - px) / inLen) * rr;
+    const ay = cy - ((cy - py) / inLen) * rr;
+    const bx = cx + ((nx - cx) / outLen) * rr;
+    const by = cy + ((ny - cy) / outLen) * rr;
+    d += ` L${ax} ${ay} Q${cx} ${cy} ${bx} ${by}`;
+  }
+  const last = pts[pts.length - 1];
+  return `${d} L${last[0]} ${last[1]}`;
+}
+
+function arrowHead(pts: Pt[]) {
+  const [x, y] = pts[pts.length - 1];
+  const [px, py] = pts[pts.length - 2];
+  const len = Math.hypot(x - px, y - py) || 1;
+  const ux = (x - px) / len;
+  const uy = (y - py) / len;
+  const s = 6;
+  const bx = x - ux * s * 1.4;
+  const by = y - uy * s * 1.4;
+  return `M${x} ${y} L${bx - uy * s} ${by + ux * s} L${bx + uy * s} ${by - ux * s} Z`;
+}
+
+const views = (['h', 'v'] as const).map((o) => ({ o, ...layout(o) }));
+const hasGate = diagram.nodes.some((n) => n.tone === 'gate');
+const hasMine = diagram.nodes.some((n) => n.tone === 'mine');
+const mainPairs = diagram.main.slice(1).map((id, i) => `${diagram.main[i]}>${id}`);
+---
+
+<figure class="diagram" data-diagram data-main={mainPairs.join(',')}>
+  {views.map((v) => (
+    <svg
+      class={`view view-${v.o}`}
+      viewBox={`0 0 ${v.width} ${v.height}`}
+      width={v.width}
+      height={v.height}
+      style={`max-width: ${v.width}px`}
+      role="img"
+      aria-labelledby={`dg-${slug}-${v.o}-t dg-${slug}-cap`}
+    >
+      <title id={`dg-${slug}-${v.o}-t`}>{`${title} architecture`}</title>
+      <g class="edges">
+        {v.edges.map((e) => (
+          <g class={`edge${mainPairs.includes(`${e.from}>${e.to}`) ? ' is-main' : ''}`} data-edge={`${e.from}>${e.to}`}>
+            <path class="line" d={e.d} pathLength="1" />
+            <path class="arrow" d={e.arrow} />
+          </g>
+        ))}
+      </g>
+      <g class="nodes">
+        {v.nodes.map((n) => (
+          <g class={`node${n.tone ? ` tone-${n.tone}` : ''}`} transform={`translate(${n.x} ${n.y})`}>
+            <g class="node-inner">
+              <rect width={n.w} height={n.h} rx="10" />
+              {v.o === 'h' ? (
+                <>
+                  <text class="label" x="14" y="28">{n.label}</text>
+                  {n.sub && <text class="sub" x="14" y="48">{n.sub}</text>}
+                </>
+              ) : (
+                <text class="label" x={n.w / 2} y={n.h / 2 + 5} text-anchor="middle">{n.label}</text>
+              )}
+            </g>
+          </g>
+        ))}
+      </g>
+      <g class="pulse" aria-hidden="true">
+        <circle class="halo" r="9" />
+        <circle class="dot" r="4" />
+      </g>
+    </svg>
+  ))}
+  <figcaption id={`dg-${slug}-cap`}>
+    <ul class="legend" aria-label="Legend">
+      <li><span class="key key-main" aria-hidden="true"></span>Main data flow</li>
+      {hasGate && <li><span class="key key-gate" aria-hidden="true"></span>Needs human approval</li>}
+      {hasMine && <li><span class="key key-mine" aria-hidden="true"></span>Parts I built</li>}
+    </ul>
+    <p>{diagram.caption}</p>
+  </figcaption>
+</figure>
+
+<style>
+  .diagram { margin: 0; }
+  .view { width: 100%; height: auto; overflow: visible; margin-inline: auto; }
+  .view-v { display: none; }
+  @media (max-width: 900px) {
+    .view-h { display: none; }
+    .view-v { display: block; }
+  }
+  .edge .line { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+  .edge .arrow { fill: var(--line-strong); }
+  .edge.is-main .line { stroke: var(--accent); stroke-width: 2; }
+  .edge.is-main .arrow { fill: var(--accent); }
+  .node rect { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1; }
+  .node.tone-gate rect { fill: var(--gate-soft); stroke: var(--gate); }
+  .node.tone-mine rect { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 3; }
+  .label { font: 600 14px var(--sans); fill: var(--ink); letter-spacing: -0.01em; }
+  .view-v .label { font-size: 14px; }
+  .sub { font: 400 10.5px var(--mono); fill: var(--muted); }
+  .node.tone-gate .label { fill: var(--gate); }
+  .pulse { opacity: 0; pointer-events: none; }
+  .pulse .dot { fill: var(--accent); }
+  .pulse .halo { fill: var(--accent); opacity: 0.22; }
+  .node-inner { transform-box: fill-box; transform-origin: center; }
+
+  figcaption { margin-top: 20px; display: grid; gap: 10px; max-width: 72ch; }
+  figcaption p { margin: 0; color: var(--ink-2); font-size: 0.9375rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 0.6875rem; color: var(--muted); }
+  .legend li { display: inline-flex; align-items: center; gap: 8px; }
+  .key { width: 18px; height: 10px; border-radius: 3px; border: 1.5px solid var(--line-strong); }
+  .key-main { height: 2px; border: 0; background: var(--accent); border-radius: 2px; }
+  .key-gate { border-color: var(--gate); background: var(--gate-soft); }
+  .key-mine { border-color: var(--accent); border-style: dashed; }
+
+  /* Animated states: hidden until the diagram scrolls into view (JS + motion only). */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .diagram:not(.is-drawn) .node-inner { opacity: 0; transform: scale(0.96); }
+    :global(.js) .diagram:not(.is-drawn) .line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    :global(.js) .diagram:not(.is-drawn) .arrow { opacity: 0; }
+  }
+</style>

@@ -1,0 +1,44 @@
+{
+  "slug": "face-detector",
+  "title": "AI-Generated Face Detector",
+  "tagline": "Deep learning vs classical baselines",
+  "duration": 47.9,
+  "alt": {
+    "poster": "Inference result for a dataset face labelled fake: the model predicts AI-generated with 99.8% confidence, shown with a red confidence bar and the predict.py terminal output.",
+    "preview.mp4": "A real dataset face is classified: the predict.py command runs and the result appears as Real with a 97.6% confidence bar.",
+    "screenshots/dashboard.webp": "Face the Truth dashboard with a training form (execution environment, model, samples per class, epochs, batch size) and a data pipeline panel with download, distortion and benchmark jobs.",
+    "screenshots/eda.webp": "Exploratory data analysis: a text summary of 230,335 images, a class distribution chart per split, images per data set, and a grid of sample fake and real faces.",
+    "screenshots/inference.webp": "Inference result for a real dataset face: predicted Real with 97.6% confidence, P(real) 97.6%, P(fake) 2.4%, alongside the predict.py terminal output."
+  },
+  "screenshots": [
+    "screenshots/dashboard.webp",
+    "screenshots/eda.webp",
+    "screenshots/inference.webp"
+  ],
+  "dims": {
+    "walkthrough.mp4": {
+      "width": 1920,
+      "height": 1080
+    },
+    "preview.mp4": {
+      "width": 1280,
+      "height": 720
+    },
+    "poster.jpg": {
+      "width": 1920,
+      "height": 1080
+    },
+    "screenshots/dashboard.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/eda.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/inference.webp": {
+      "width": 1600,
+      "height": 900
+    }
+  }
+}

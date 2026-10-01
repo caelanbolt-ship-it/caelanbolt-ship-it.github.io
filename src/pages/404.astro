@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { projects } from '../data/projects';
+---
+
+<Base title="Page not found · Caelan Hartley" description="This page doesn’t exist. Head back to the projects." noindex>
+  <section class="container nf">
+    <p class="code mono" data-reveal>404 · route not found</p>
+    <h1 data-reveal>That Page Doesn’t Exist</h1>
+    <p class="lede" data-reveal>The link may be out of date. Here’s where you can go instead:</p>
+    <div class="actions" data-reveal>
+      <a class="btn btn--primary" href="/"><Icon name="arrow-left" />Back to Home</a>
+      <a class="btn" href="/#work">See All Projects</a>
+    </div>
+    <ul class="list" data-reveal>
+      {projects.map((p) => (
+        <li><a href={`/projects/${p.slug}/`}><span>{p.title}</span><span class="t">{p.tagline}</span></a></li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .nf { padding-block: clamp(56px, 10vw, 128px); max-width: 880px; }
+  .code { color: var(--gate); margin: 0 0 16px; }
+  h1 { font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: -0.05em; }
+  .lede { color: var(--ink-2); margin: 18px 0 28px; font-size: 1.125rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 48px; }
+  .list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .list a { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); text-decoration: none; font-weight: 600; }
+  .list a:hover span:first-child { color: var(--accent); }
+  .t { color: var(--muted); font-weight: 400; text-align: right; }
+  @media (max-width: 520px) { .list a { flex-direction: column; gap: 2px; } .t { text-align: left; } }
+</style>

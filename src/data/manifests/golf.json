@@ -1,0 +1,67 @@
+{
+  "slug": "golf",
+  "title": "Golf Event Planner",
+  "tagline": "AI-assisted tournament planning",
+  "duration": 128.6,
+  "alt": {
+    "poster": "Golf Event Planner tee sheet: an organizer drags a two-player team block between tee groups; a newly registered player's team sits in Group 13.",
+    "screenshots/pairings-board.webp": "Drag-and-drop tee schedule with 13 tee groups of two-player teams (gold blocks), a newly registered player in Group 13 and three open slots, with Save Order pending.",
+    "screenshots/chatbot-weather.webp": "Planning assistant answering a weather question with the live forecast for the event day (drizzle, 14.5°C high, sunrise 7:23 AM) and advice to keep the 8:00 AM tee times, noting 13 groups with the last off at 10:00 AM.",
+    "screenshots/generated-document.webp": "Generated Player Information Guide (the tournament rulebook) for the Maple Ridge Charity Classic, with event details, check-in, format and scoring sections.",
+    "screenshots/email-mailpit.webp": "HTML tee-schedule email for the Maple Ridge Charity Classic open in an inbox that also holds the invitation and player-guide emails.",
+    "screenshots/catering-summary.webp": "Generated Food & Beverage Summary for the caterer: a post-round BBQ lunch with a $2,500 budget, next to the Club Operations Sheet.",
+    "screenshots/player-registered.webp": "Public player registration page confirming \"You're registered!\" with the player placed in Group 13 at 10:00 AM (49 of 52 spots filled).",
+    "screenshots/cart-placards.webp": "Print-ready cart placard PDF: green cards naming each two-player team with its tee time and group number."
+  },
+  "screenshots": [
+    "screenshots/pairings-board.webp",
+    "screenshots/chatbot-weather.webp",
+    "screenshots/generated-document.webp",
+    "screenshots/email-mailpit.webp",
+    "screenshots/catering-summary.webp",
+    "screenshots/player-registered.webp",
+    "screenshots/cart-placards.webp"
+  ],
+  "dims": {
+    "walkthrough.mp4": {
+      "width": 1920,
+      "height": 1080
+    },
+    "preview.mp4": {
+      "width": 1280,
+      "height": 720
+    },
+    "poster.jpg": {
+      "width": 1920,
+      "height": 1080
+    },
+    "screenshots/pairings-board.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/chatbot-weather.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/generated-document.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/email-mailpit.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/catering-summary.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/player-registered.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/cart-placards.webp": {
+      "width": 1600,
+      "height": 900
+    }
+  }
+}

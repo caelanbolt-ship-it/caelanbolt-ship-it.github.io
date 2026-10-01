@@ -1,0 +1,84 @@
+---
+import Icon from './Icon.astro';
+import type { Shot } from '../data/projects';
+
+interface Props { shots: Shot[]; title: string }
+const { shots, title } = Astro.props;
+---
+
+<div class="gallery" data-gallery>
+  <ul class="grid">
+    {shots.map((s, i) => (
+      <li data-reveal>
+        <button type="button" class="thumb" data-shot={i} aria-label={`Enlarge screenshot ${i + 1} of ${shots.length}`}>
+          <img
+            src={s.src.replace(/\.webp$/, '-800.webp')}
+            srcset={`${s.src.replace(/\.webp$/, '-800.webp')} 800w, ${s.src} ${s.width}w`}
+            sizes="(min-width: 1240px) 590px, (min-width: 641px) 46vw, 92vw"
+            alt={s.alt}
+            width={s.width}
+            height={s.height}
+            loading="lazy"
+            decoding="async"
+          />
+        </button>
+        <p class="cap">{s.alt}</p>
+      </li>
+    ))}
+  </ul>
+
+  <dialog class="lightbox" data-lightbox aria-label={`${title} screenshots`}>
+    <div class="frame">
+      <img data-lb-img src={shots[0]?.src} alt="" width="1600" height="900" />
+      <p class="lb-cap" data-lb-cap></p>
+    </div>
+    <div class="lb-controls">
+      <span class="mono" data-lb-count aria-live="polite"></span>
+      <div class="lb-buttons">
+        <button type="button" data-lb-prev aria-label="Previous screenshot"><Icon name="arrow-left" size={18} /></button>
+        <button type="button" data-lb-next aria-label="Next screenshot"><Icon name="arrow-right" size={18} /></button>
+        <button type="button" data-lb-close aria-label="Close"><Icon name="close" size={18} /></button>
+      </div>
+    </div>
+    <script type="application/json" data-lb-data set:html={JSON.stringify(shots)} />
+  </dialog>
+</div>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; list-style: none; margin: 0; padding: 0; }
+  .thumb {
+    display: block; width: 100%; padding: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden;
+    background: var(--surface-2); cursor: zoom-in; touch-action: manipulation;
+    transition: transform 0.35s var(--ease-out);
+  }
+  .thumb img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  @media (hover: hover) and (pointer: fine) {
+    .thumb:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+  }
+  .cap { margin: 10px 2px 0; font-size: 0.875rem; color: var(--muted); }
+  /* With an odd number of shots, the first one leads full-width so the grid ends evenly. */
+  .grid li:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
+  .lightbox {
+    width: min(1280px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 0; border-radius: var(--radius);
+    background: var(--surface); color: var(--ink); box-shadow: var(--shadow-md); overscroll-behavior: contain;
+  }
+  .lightbox::backdrop { background: rgb(6 8 12 / 0.78); }
+  .frame img { width: 100%; height: auto; max-height: calc(100dvh - 180px); object-fit: contain; background: var(--surface-2); }
+  .lb-cap { margin: 0; padding: 14px 18px 0; color: var(--ink-2); font-size: 0.9375rem; }
+  .lb-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 12px 12px 18px; }
+  .lb-controls .mono { color: var(--muted); }
+  .lb-buttons { display: flex; gap: 8px; }
+  .lb-buttons button {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line-strong); background: var(--surface); touch-action: manipulation;
+  }
+  .lb-buttons button:hover { border-color: var(--ink-2); }
+  @media (prefers-reduced-motion: no-preference) {
+    .lightbox[open] { animation: lb-in 0.28s var(--ease-out); }
+    .lightbox[open]::backdrop { animation: fade 0.28s ease; }
+  }
+  @keyframes lb-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
+  @keyframes fade { from { opacity: 0; } }
+</style>

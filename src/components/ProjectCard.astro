@@ -1,0 +1,97 @@
+---
+import Icon from './Icon.astro';
+import { formatDuration, type Project } from '../data/projects';
+
+interface Props { project: Project; featured?: boolean }
+const { project: p, featured = false } = Astro.props;
+const isVideo = p.media.kind === 'video';
+---
+
+<article class:list={['card', { featured }]} data-reveal>
+  <a class="link" href={`/projects/${p.slug}/`} aria-labelledby={`card-${p.slug}-title`} aria-describedby={`card-${p.slug}-desc`}>
+    <div class="media" transition:name={`media-${p.slug}`}>
+      <img
+        src={`/media/${p.slug}/poster-960.webp`}
+        srcset={`/media/${p.slug}/poster-640.webp 640w, /media/${p.slug}/poster-960.webp 960w`}
+        sizes={featured ? '(min-width: 960px) 680px, 92vw' : '(min-width: 960px) 580px, 92vw'}
+        width="1920"
+        height="1080"
+        alt={p.media.posterAlt}
+        loading="lazy"
+        decoding="async"
+      />
+      {isVideo && (
+        <video muted loop playsinline preload="none" data-preview data-src={`/media/${p.slug}/preview.mp4`} aria-hidden="true" tabindex="-1"></video>
+      )}
+      <span class="badge mono">
+        {p.media.kind === 'video' ? (
+          <><Icon name="play" size={10} />{formatDuration(p.media.duration)}</>
+        ) : (
+          <><Icon name="play" size={10} />YouTube</>
+        )}
+      </span>
+    </div>
+    <div class="body">
+      <p class="kicker mono">{p.kicker}</p>
+      <h3 id={`card-${p.slug}-title`} transition:name={`title-${p.slug}`} translate="no">{p.title}</h3>
+      <p class="tagline" id={`card-${p.slug}-desc`}>{p.tagline}</p>
+      {featured && <p class="pitch">{p.pitch}</p>}
+      <ul class="chips" aria-label="Stack" translate="no">
+        {p.chips.map((c) => <li>{c}</li>)}
+      </ul>
+      <span class="more">View Project <Icon name="arrow-right" size={16} /></span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .card { position: relative; height: 100%; transition: transform 0.35s var(--ease-out); }
+  /* The hover shadow lives on a pseudo-element so only its opacity animates. */
+  .card::after {
+    content: ''; position: absolute; inset: 0; border-radius: var(--radius); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
+  }
+  .link {
+    display: flex; flex-direction: column; height: 100%; text-decoration: none;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  }
+  .media { position: relative; aspect-ratio: 16 / 9; background: var(--surface-2); overflow: hidden; }
+  .media img, .media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .media img { transition: transform 0.6s var(--ease-out); }
+  .media video { opacity: 0; transition: opacity 0.35s ease; }
+  .media video.is-playing { opacity: 1; }
+  .badge {
+    position: absolute; left: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 8px; border-radius: 6px; font-size: 0.6875rem; line-height: 1;
+    background: rgb(12 15 20 / 0.72); color: #fff; backdrop-filter: blur(4px);
+  }
+  .body { display: flex; flex-direction: column; gap: 8px; padding: 20px 22px 22px; flex: 1; }
+  .kicker { margin: 0; color: var(--muted); }
+  h3 { font-size: clamp(1.35rem, 2vw, 1.6rem); letter-spacing: -0.03em; }
+  .tagline { margin: 0; color: var(--ink-2); }
+  .pitch { margin: 4px 0 6px; color: var(--muted); font-size: 0.975rem; }
+  .chips { margin-top: 6px; }
+  .more {
+    margin-top: auto; padding-top: 14px; display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 600; font-size: 0.9375rem; color: var(--accent);
+  }
+  .more :global(svg) { transition: transform 0.3s var(--ease-out); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover { transform: translateY(-4px); }
+    .card:hover::after { opacity: 1; }
+    .link:hover { border-color: var(--line-strong); }
+    .link:hover .media img { transform: scale(1.02); }
+    .link:hover .more :global(svg) { transform: translateX(4px); }
+  }
+  .link:focus-visible { outline-offset: 4px; border-radius: var(--radius); }
+
+  @media (min-width: 960px) {
+    .featured .link { flex-direction: row; }
+    .featured .media { flex: 1.35; aspect-ratio: auto; min-height: 100%; }
+    .featured .media img, .featured .media video { position: absolute; }
+    .featured .body { flex: 1; padding: clamp(28px, 3vw, 44px); justify-content: center; }
+    .featured h3 { font-size: clamp(2rem, 3.2vw, 2.6rem); }
+    .featured .more { margin-top: 12px; }
+  }
+</style>

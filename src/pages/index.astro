@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Experience from '../components/Experience.astro';
+import { projects } from '../data/projects';
+import { site } from '../data/site';
+
+const [featured, ...rest] = projects;
+---
+
+<Base
+  title={`${site.name}: Software Engineering, agentic AI systems`}
+  description={site.description}
+  preloadImage={{
+    href: `/media/${featured.slug}/poster-960.webp`,
+    srcset: `/media/${featured.slug}/poster-640.webp 640w, /media/${featured.slug}/poster-960.webp 960w`,
+    sizes: '(min-width: 1024px) 560px, 92vw',
+  }}
+>
+  <Hero />
+
+  <section class="section container work" id="work" aria-labelledby="work-title">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Selected work</p>
+        <h2 id="work-title">Projects</h2>
+      </div>
+      <p>Each project page has the full walkthrough, the architecture, and exactly what I built.</p>
+    </div>
+    <div class="grid">
+      <div class="span-all"><ProjectCard project={featured} featured /></div>
+      {rest.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  <Experience />
+</Base>
+
+<style>
+  .work { padding-top: clamp(24px, 4vw, 48px); }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2vw, 24px); }
+  .span-all { grid-column: 1 / -1; }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

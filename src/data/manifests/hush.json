@@ -1,0 +1,49 @@
+{
+  "slug": "hush",
+  "title": "Hush",
+  "tagline": "AI-personalized audio fiction",
+  "duration": 81,
+  "alt": {
+    "poster": "Hush story page for \"The Vanishing First Edition\": an audio player at 0:06 of 4:57 above a read-along panel with the current paragraph highlighted.",
+    "screenshots/preferences.webp": "Hush preferences form: main character Maggie, companion Pip, story elements Amateur sleuth and Red herrings, settings Cozy mystery and Bookshop & café, tone set to Cozy, 5-minute length, Bella voice.",
+    "screenshots/generation-progress.webp": "Hush library while a story is being written: a gold ring and progress bar at 33% labelled Writing, updated live over server-sent events.",
+    "screenshots/story-player.webp": "Hush story page playing the generated story \"The Vanishing First Edition\", with a read-along panel highlighting the paragraph being narrated.",
+    "screenshots/pricing.webp": "Hush pricing: Free (45 credits a month), Standard at $7.99 (300 credits) and Premium at $16.99 (900 credits), where one credit is one minute of narration."
+  },
+  "screenshots": [
+    "screenshots/preferences.webp",
+    "screenshots/generation-progress.webp",
+    "screenshots/story-player.webp",
+    "screenshots/pricing.webp"
+  ],
+  "dims": {
+    "walkthrough.mp4": {
+      "width": 1920,
+      "height": 1080
+    },
+    "preview.mp4": {
+      "width": 1280,
+      "height": 720
+    },
+    "poster.jpg": {
+      "width": 1920,
+      "height": 1080
+    },
+    "screenshots/preferences.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/generation-progress.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/story-player.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/pricing.webp": {
+      "width": 1600,
+      "height": 900
+    }
+  }
+}

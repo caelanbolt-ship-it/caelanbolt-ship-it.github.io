@@ -1,0 +1,41 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:01.800
+Golf Event Planner: AI-assisted tournament planning
+
+2
+00:00:09.670 --> 00:00:19.500
+Agent calls my own MCP server: forecast + sunrise
+
+3
+00:00:19.880 --> 00:00:31.130
+Answers grounded in RAG over tournament docs
+
+4
+00:00:31.470 --> 00:00:45.810
+Chat updates the live plan: catering added
+
+5
+00:00:49.460 --> 00:00:59.110
+Rulebook and catering summary generated from the plan
+
+6
+00:00:59.190 --> 00:01:19.500
+Invite email → player self-registration
+
+7
+00:01:19.680 --> 00:01:33.820
+Pairings validated in the browser and on the server
+
+8
+00:01:33.990 --> 00:01:40.610
+Cart placards exported as a print-ready PDF
+
+9
+00:01:40.760 --> 00:02:06.530
+Automated player emails
+
+10
+00:02:06.533 --> 00:02:08.600
+Golf Event Planner · React · FastAPI · MongoDB · Claude · MCP

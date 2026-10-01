@@ -1,0 +1,66 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" id="contact" transition:name="site-footer">
+  <div class="container">
+    <div class="cta" data-reveal>
+      <p class="eyebrow">Contact</p>
+      <h2>Get in Touch</h2>
+      <p class="lede">Email is the fastest way to reach me.</p>
+      <div class="mail-row">
+        <a class="mail" href={`mailto:${site.email}`}><span>{site.email}</span></a>
+        <button class="copy" type="button" data-copy={site.email} aria-label="Copy email address">
+          <span class="i-copy"><Icon name="copy" size={18} /></span>
+          <span class="i-check"><Icon name="check" size={18} /></span>
+          <span class="copy-label" aria-live="polite"></span>
+        </button>
+      </div>
+      <div class="links">
+        <a class="btn btn--primary" href={site.resume} data-astro-reload><Icon name="file" />Résumé (PDF)</a>
+        <a class="btn" href={site.github} rel="me"><Icon name="github" />GitHub</a>
+        <a class="btn" href={site.linkedin} rel="me"><Icon name="linkedin" />LinkedIn</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© {year} {site.name}</span>
+      <span>Built with Astro. No trackers.</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--line); padding-top: clamp(64px, 9vw, 112px); }
+  h2 { font-size: clamp(2.25rem, 5.5vw, 4rem); letter-spacing: -0.045em; margin: 10px 0 12px; }
+  .lede { color: var(--muted); margin-bottom: 20px; }
+  .mail-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .mail {
+    position: relative; text-decoration: none; font-weight: 600;
+    font-size: clamp(1.25rem, 3.4vw, 2.25rem); letter-spacing: -0.03em; overflow-wrap: anywhere;
+    padding-bottom: 4px;
+  }
+  .mail::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent);
+    transform-origin: left; transform: scaleX(0.25); transition: transform 0.35s var(--ease-out);
+  }
+  .mail:hover::after, .mail:focus-visible::after { transform: scaleX(1); }
+  .copy {
+    position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px;
+    border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer; touch-action: manipulation;
+  }
+  .copy:hover { border-color: var(--ink-2); }
+  .i-check { display: none; color: var(--accent); }
+  .copy.is-copied .i-copy { display: none; }
+  .copy.is-copied .i-check { display: block; }
+  .copy-label {
+    position: absolute; left: calc(100% + 10px); white-space: nowrap; font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
+  }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .legal {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    margin-top: clamp(64px, 8vw, 96px); padding-block: 24px 32px; border-top: 1px solid var(--line);
+    font-size: 0.875rem; color: var(--muted);
+  }
+</style>

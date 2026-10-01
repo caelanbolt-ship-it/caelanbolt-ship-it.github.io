@@ -1,0 +1,195 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { projects } from '../data/projects';
+
+// The reel cycles the four real preview loops; Assessly has no preview video.
+const reel = projects.filter((p) => p.media.kind === 'video');
+const words = site.name.split(' ').map((w) => [...w]);
+---
+
+<section class="hero container" aria-labelledby="hero-title">
+  <div class="intro">
+    <p class="eyebrow" data-hero-part>
+      <span class="dot" aria-hidden="true"></span>{site.role}
+    </p>
+    <h1 id="hero-title" class="name" translate="no">
+      <span class="sr-only">{site.name}</span>
+      <span class="letters" aria-hidden="true">
+        {words.map((word) => (
+          <span class="word">{word.map((ch) => <span class="ch">{ch}</span>)}</span>
+        ))}
+      </span>
+    </h1>
+    <p class="statement" data-hero-part>
+      I build <span class="hl">agentic AI systems<span class="rule" aria-hidden="true"></span></span>.
+    </p>
+    <p class="sub" data-hero-part>
+      5 projects, each with a walkthrough video of the real thing running.
+    </p>
+    <div class="actions" data-hero-part>
+      <a class="btn btn--primary" href={site.resume} data-astro-reload><Icon name="file" />Résumé (PDF)</a>
+      <a class="btn" href={site.github} rel="me"><Icon name="github" />GitHub</a>
+      <a class="btn" href={site.linkedin} rel="me"><Icon name="linkedin" />LinkedIn</a>
+      <a class="btn" href={`mailto:${site.email}`}><Icon name="mail" />Email</a>
+    </div>
+  </div>
+
+  <div class="reel" data-reel role="region" aria-roledescription="carousel" aria-label="Project previews">
+    <div class="deck">
+      {reel.map((p, i) => (
+        <a
+          class="slide"
+          href={`/projects/${p.slug}/`}
+          data-slide={i}
+          data-depth={Math.min(i, 3)}
+          aria-hidden={i === 0 ? undefined : 'true'}
+          tabindex={i === 0 ? undefined : -1}
+          aria-label={`${p.title}: watch the walkthrough`}
+        >
+          <img
+            src={`/media/${p.slug}/poster-960.webp`}
+            srcset={`/media/${p.slug}/poster-640.webp 640w, /media/${p.slug}/poster-960.webp 960w`}
+            sizes="(min-width: 1024px) 560px, 92vw"
+            width="1920"
+            height="1080"
+            alt=""
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : 'low'}
+            decoding="async"
+          />
+          <video muted playsinline preload="none" data-src={`/media/${p.slug}/preview.mp4`} aria-hidden="true" tabindex="-1"></video>
+        </a>
+      ))}
+    </div>
+    <div class="reel-bar">
+      <p class="now" data-reel-live aria-live="off">
+        <span class="mono">Now previewing</span>
+        <a href={`/projects/${reel[0].slug}/`} data-reel-link>
+          <strong data-reel-title>{reel[0].title}</strong>
+          <span class="tag" data-reel-tag>{reel[0].tagline}</span>
+        </a>
+      </p>
+      <div class="controls">
+        <ol class="segments">
+          {reel.map((p, i) => (
+            <li>
+              <button type="button" data-seg={i} aria-label={`Preview ${p.title}`} aria-current={i === 0 ? 'true' : undefined}>
+                <span class="fill"></span>
+              </button>
+            </li>
+          ))}
+        </ol>
+        <button class="toggle" type="button" data-reel-toggle aria-label="Pause previews" aria-pressed="false">
+          <span class="i-pause"><Icon name="pause" size={14} /></span>
+          <span class="i-play"><Icon name="play" size={14} /></span>
+        </button>
+      </div>
+    </div>
+    <script type="application/json" data-reel-data set:html={JSON.stringify(reel.map((p) => ({ slug: p.slug, title: p.title, tagline: p.tagline })))} />
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 5vw, 80px);
+    align-items: center; padding-block: clamp(40px, 8vw, 104px) clamp(56px, 8vw, 112px);
+  }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 22px; color: var(--ink-2); }
+  .dot { width: 8px; height: 8px; border-radius: 2px; background: var(--accent); }
+
+  .name {
+    font-size: clamp(3.4rem, 8.2vw, 7.25rem); font-weight: 800; line-height: 0.9; letter-spacing: -0.055em;
+    margin: 0 0 26px;
+  }
+  .letters { display: flex; flex-direction: column; }
+  .word { display: block; white-space: nowrap; }
+  .ch { display: inline-block; }
+  .word + .word .ch:first-child { margin-left: -0.02em; }
+
+  .statement {
+    font-size: clamp(1.4rem, 2.6vw, 2.1rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.2;
+    color: var(--ink-2); margin: 0 0 14px;
+  }
+  .hl { position: relative; color: var(--ink); white-space: nowrap; }
+  .rule {
+    position: absolute; left: 0; right: 0; bottom: -0.08em; height: 0.09em; border-radius: 1px;
+    background: var(--accent); transform-origin: left;
+  }
+  .sub { color: var(--muted); max-width: 30rem; margin: 0 0 28px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  /* Reel ----------------------------------------------------------------- */
+  .reel { position: relative; }
+  .deck { position: relative; aspect-ratio: 16 / 10.4; }
+  .slide {
+    position: absolute; left: 0; bottom: 0; width: 88%; aspect-ratio: 16 / 9;
+    border-radius: var(--radius); overflow: hidden; background: var(--surface-2);
+    box-shadow: 0 1px 0 var(--line), 0 24px 48px -28px rgb(12 15 20 / 0.45);
+    outline-offset: 4px;
+    transition: transform 0.75s var(--ease-out), opacity 0.6s ease;
+    will-change: transform;
+  }
+  .slide img, .slide video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .slide video { opacity: 0; transition: opacity 0.4s ease; }
+  .slide video.is-playing { opacity: 1; }
+  .slide[data-depth='0'] { z-index: 4; transform: none; }
+  .slide[data-depth='1'] { z-index: 3; transform: translate(6.5%, -7%) scale(0.94); opacity: 0.8; }
+  .slide[data-depth='2'] { z-index: 2; transform: translate(12.5%, -13.5%) scale(0.88); opacity: 0.5; }
+  .slide[data-depth='3'] { z-index: 1; transform: translate(12.5%, -13.5%) scale(0.88); opacity: 0; }
+  .slide[data-depth='out'] { z-index: 5; transform: translate(-7%, 4%) scale(0.97); opacity: 0; }
+  /* Fanned-in starting state for the intro */
+  :global(.js) .reel:not(.is-ready) .slide { transform: none; opacity: 0; }
+  :global(.js) .reel:not(.is-ready) .slide[data-depth='0'] { opacity: 1; }
+
+  .reel-bar {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px;
+    margin-top: 18px; width: 88%;
+  }
+  .now { margin: 0; min-width: 0; display: grid; gap: 2px; }
+  .now a { text-decoration: none; display: flex; gap: 8px; align-items: baseline; min-width: 0; }
+  .now a:hover strong { text-decoration: underline; }
+  .now strong { font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+  .now .tag { color: var(--muted); font-size: 0.9375rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .now .mono { color: var(--muted); }
+  .controls { display: flex; align-items: center; gap: 10px; flex: none; }
+  .segments { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  .segments button {
+    position: relative; width: 28px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer;
+    touch-action: manipulation;
+  }
+  .segments button::before, .fill {
+    content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 3px; margin-top: -1.5px; border-radius: 3px;
+  }
+  .segments button::before { background: var(--line-strong); }
+  .segments button:hover::before { background: var(--muted); }
+  .fill { background: var(--ink); transform-origin: left; transform: scaleX(0); }
+  .segments button[aria-current='true'] .fill { transform: scaleX(var(--p, 0)); }
+  .toggle {
+    display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line-strong); background: var(--surface); touch-action: manipulation;
+  }
+  .toggle:hover { border-color: var(--ink-2); }
+  .i-play { display: none; }
+  .toggle[aria-pressed='true'] .i-pause { display: none; }
+  .toggle[aria-pressed='true'] .i-play { display: block; }
+
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; }
+    .reel { max-width: 640px; }
+  }
+  @media (max-width: 520px) {
+    .reel-bar { width: 100%; }
+    .now .tag { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reel .controls .toggle { display: none; }
+  }
+
+  /* Intro: letters + parts start hidden only when JS runs and motion is allowed */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .hero:not(.is-in) .ch { opacity: 0; transform: translateY(0.35em); }
+    :global(.js) .hero:not(.is-in) [data-hero-part] { opacity: 0; transform: translateY(12px); }
+    :global(.js) .hero:not(.is-in) .rule { transform: scaleX(0); }
+  }
+</style>

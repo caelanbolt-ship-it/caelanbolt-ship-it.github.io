@@ -1,0 +1,49 @@
+{
+  "slug": "my-crm",
+  "title": "my-crm",
+  "tagline": "An agentic personal operations platform",
+  "duration": 90.6,
+  "alt": {
+    "poster": "my-crm agent workspace: after a request to move Friday's dinner, the agent shows a 'Needs your confirmation' card for calendar_update_event with the new 7pm start and end times, and Run it / Leave it buttons.",
+    "screenshots/dashboard.webp": "my-crm home: a conversation pane inviting questions about mail, calendar, spending and training, beside a Routing panel and an activity feed mixing options, calendar, mail, props and fitness events.",
+    "screenshots/money.webp": "my-crm Money page for September: $2,664 spent so far, $4,900 in, a monthly comparison bar, a spending-by-day chart and category budgets.",
+    "screenshots/chat-trace.webp": "my-crm conversation after four requests, ending with a generated push workout plan booked for 6pm; the Routing panel lists fitness_generate_plan and calendar_create_event with their durations.",
+    "screenshots/approval-step.webp": "my-crm human-in-the-loop approval: a 'Needs your confirmation' card showing calendar_update_event and its arguments, with Run it and Leave it buttons."
+  },
+  "screenshots": [
+    "screenshots/dashboard.webp",
+    "screenshots/money.webp",
+    "screenshots/chat-trace.webp",
+    "screenshots/approval-step.webp"
+  ],
+  "dims": {
+    "walkthrough.mp4": {
+      "width": 1920,
+      "height": 1080
+    },
+    "preview.mp4": {
+      "width": 1280,
+      "height": 720
+    },
+    "poster.jpg": {
+      "width": 1920,
+      "height": 1080
+    },
+    "screenshots/dashboard.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/money.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/chat-trace.webp": {
+      "width": 1600,
+      "height": 900
+    },
+    "screenshots/approval-step.webp": {
+      "width": 1600,
+      "height": 900
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "chartle5-portfolio",
+  "type": "module",
+  "version": "2.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "verify:exports": "node scripts/verify-exports.mjs",
+    "sync:media": "node scripts/sync-media.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@fontsource/martian-mono": "^5.3.0",
+    "astro": "^7.3.5",
+    "motion": "^13.4.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@fontsource/schibsted-grotesk": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "playwright": "^1.63.0",
+    "satori": "^0.33.5",
+    "typescript": "^5.9.3"
+  }
+}

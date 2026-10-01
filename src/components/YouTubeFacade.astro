@@ -1,0 +1,60 @@
+---
+// Lite YouTube facade: a self-hosted thumbnail and a real <button>.
+// The youtube-nocookie iframe is created only after the visitor presses play.
+import Icon from './Icon.astro';
+
+/** `media` is the project's media folder, e.g. /media/assessly (holds the poster variants). */
+interface Props { id: string; title: string; media: string; alt: string }
+const { id, title, media, alt } = Astro.props;
+---
+
+<div class="yt" data-yt={id} data-yt-title={`${title} walkthrough on YouTube`}>
+  <img
+    src={`${media}/poster-960.webp`}
+    srcset={`${media}/poster-640.webp 640w, ${media}/poster-960.webp 960w, ${media}/poster-1280.webp 1280w`}
+    sizes="(min-width: 1240px) 1200px, 100vw"
+    width="1280"
+    height="720"
+    alt={alt}
+    fetchpriority="high"
+    decoding="async"
+  />
+  <button type="button" class="play" data-yt-play aria-label={`Play the ${title} walkthrough (loads YouTube)`}>
+    <span class="pill">
+      <span class="disc"><Icon name="play" size={18} /></span>
+      <span class="label">Play Walkthrough</span>
+    </span>
+  </button>
+  <noscript>
+    <a class="fallback" href={`https://www.youtube.com/watch?v=${id}`}>Watch on YouTube</a>
+  </noscript>
+</div>
+
+<style>
+  .yt { position: relative; aspect-ratio: 16 / 9; background: #000; }
+  .yt img { width: 100%; height: 100%; object-fit: cover; }
+  .yt :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  /* The whole frame is the button; the visible control sits bottom-left, clear of the title card. */
+  .play {
+    position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: flex-start;
+    padding: clamp(14px, 3vw, 28px); border: 0; cursor: pointer; color: #fff;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.55), transparent 45%);
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 12px; padding: 8px 18px 8px 8px; border-radius: 999px;
+    background: rgb(255 255 255 / 0.14); border: 1px solid rgb(255 255 255 / 0.35); backdrop-filter: blur(8px);
+    transition: transform 0.3s var(--ease-out);
+  }
+  .disc {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; padding-left: 3px;
+    background: #fff; color: #0a0c10;
+  }
+  .label { font-weight: 600; font-size: 0.9375rem; }
+  .play:hover .pill, .play:focus-visible .pill { transform: translateY(-2px); background: rgb(255 255 255 / 0.22); }
+  .play:focus-visible { outline: 2px solid #fff; outline-offset: -6px; }
+  @media (max-width: 560px) {
+    .pill { padding: 6px; }
+    .label { display: none; }
+  }
+  .fallback { position: absolute; left: 16px; bottom: 16px; color: #fff; }
+</style>

@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00:03.503 --> 00:00:07.877
+Flask dashboard · EfficientNet-B0 + four scikit-learn baselines
+
+2
+00:00:08.177 --> 00:00:10.826
+Train locally or submit to an H100 cluster via SLURM
+
+3
+00:00:12.546 --> 00:00:14.418
+EDA module
+
+4
+00:00:14.718 --> 00:00:23.390
+EDA module · 230,335 images across four data sets
+
+5
+00:00:25.247 --> 00:00:29.610
+Real dataset face → REAL · 97.6% confidence
+
+6
+00:00:31.471 --> 00:00:35.922
+AI-generated face → AI-GENERATED · 99.8% confidence
+
+7
+00:00:37.377 --> 00:00:45.266
+EfficientNet-B0 92.5% vs 65.9% random-forest baseline

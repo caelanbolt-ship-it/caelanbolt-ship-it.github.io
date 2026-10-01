@@ -1,0 +1,63 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+---
+
+<header class="site-header" transition:name="site-header" data-header>
+  <div class="container bar">
+    <a class="wordmark" translate="no" href="/" aria-label={`${site.name}, home`}>
+      <span class="mark" aria-hidden="true">CH</span>
+      <span class="name">{site.name}</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="/#work">Work</a></li>
+        <li><a href="/#experience">Experience</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li class="resume"><a href={site.resume} data-astro-reload>Résumé</a></li>
+      </ul>
+      <button class="theme" type="button" data-theme-toggle aria-label="Switch color theme">
+        <span class="i-sun"><Icon name="sun" size={18} /></span>
+        <span class="i-moon"><Icon name="moon" size={18} /></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    border-bottom: 1px solid transparent;
+  }
+  .site-header.is-scrolled { border-bottom-color: var(--line); background: var(--bg); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+  .wordmark { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; letter-spacing: -0.02em; }
+  .mark {
+    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px;
+    background: var(--ink); color: var(--bg); font-family: var(--mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0;
+  }
+  nav { display: flex; align-items: center; gap: clamp(8px, 2vw, 20px); }
+  ul { display: flex; gap: clamp(12px, 2.2vw, 28px); list-style: none; margin: 0; padding: 0; }
+  nav a { color: var(--ink-2); text-decoration: none; font-size: 0.9375rem; font-weight: 500; padding: 8px 0; }
+  nav a:hover { color: var(--ink); }
+  .theme {
+    display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface); cursor: pointer; color: var(--ink);
+  }
+  .theme:hover { border-color: var(--line-strong); }
+  .i-moon { display: none; }
+  :global([data-theme='dark']) .i-sun { display: none; }
+  :global([data-theme='dark']) .i-moon { display: block; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .i-sun { display: none; }
+    :global(:root:not([data-theme='light'])) .i-moon { display: block; }
+  }
+  @media (max-width: 640px) {
+    .name { display: none; }
+    ul li:nth-child(2) { display: none; }
+  }
+  @media (max-width: 380px) {
+    .resume { display: none; }
+  }
+</style>
