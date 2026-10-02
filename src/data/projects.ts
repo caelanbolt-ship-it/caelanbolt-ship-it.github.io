@@ -157,7 +157,7 @@ export const projects: Project[] = [
     slug: 'golf',
     title: 'Golf Event Planner',
     tagline: 'AI-assisted tournament planning',
-    kicker: 'SE4471 · Team of 3',
+    kicker: 'SE4471 Final Project',
     pitch:
       'An AI-assisted planner that takes a golf tournament from a chat conversation to a validated tee sheet, generated player documents and automated emails.',
     chips: ['React', 'FastAPI', 'MongoDB', 'Claude + MCP'],
