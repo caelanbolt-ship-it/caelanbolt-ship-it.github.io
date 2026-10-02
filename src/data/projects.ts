@@ -253,7 +253,7 @@ export const projects: Project[] = [
     slug: 'face-detector',
     title: 'AI-Generated Face Detector',
     tagline: 'Deep learning vs classical baselines',
-    kicker: 'DS\u00a03000 · Team of 4',
+    kicker: 'DS\u00a03000 Final Project',
     pitch:
       'A classifier that tells real face photos from AI-generated ones, pitting transfer-learned EfficientNet-B0 against classical pixel-based baselines, with a Flask dashboard for training, analysis and inference.',
     chips: ['PyTorch', 'EfficientNet-B0', 'scikit-learn', 'Flask'],
